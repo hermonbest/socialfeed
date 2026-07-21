@@ -58,6 +58,17 @@ jobs:
             --bundle-output android/app/src/main/assets/index.android.bundle \
             --assets-dest android/app/src/main/res
 
+      - name: Debug - Check local Maven repo
+        run: |
+          echo "=== react-native/android Maven repo ==="
+          find node_modules/react-native/android -name "*.pom" -o -name "maven-metadata.xml" | head -30
+          echo ""
+          echo "=== @react-native/gradle-plugin ==="
+          ls -la node_modules/@react-native/gradle-plugin/ 2>/dev/null || echo "NOT FOUND"
+          echo ""
+          echo "=== Checking for react-native artifact ==="
+          find node_modules/react-native/android -path "*/react-native/*" | head -20
+
       - name: Build Release APKs
         run: |
           cd android
