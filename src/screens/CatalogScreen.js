@@ -60,7 +60,7 @@ function CatalogScreen({navigation}) {
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" backgroundColor="#1a1a2e" />
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Photo Studio</Text>
+        <Text style={styles.headerTitle}>Brothers Studio</Text>
         <Text style={styles.headerSub}>Browse Our Services</Text>
       </View>
       <SectionList
