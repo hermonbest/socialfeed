@@ -1,7 +1,7 @@
 const TELEGRAM_BOT_TOKEN = '__TELEGRAM_BOT_TOKEN__';
 const TELEGRAM_CHAT_ID = '__TELEGRAM_CHAT_ID__';
 
-const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
 function formatPrice(price, currency) {
   if (currency === 'ETB') {
@@ -10,7 +10,7 @@ function formatPrice(price, currency) {
   return `$${price}`;
 }
 
-function formatOrderMessage(order) {
+function formatOrderCaption(order) {
   const lines = [
     '📸 *New Booking Order!*',
     '',
@@ -35,18 +35,47 @@ function formatOrderMessage(order) {
   return lines.join('\n');
 }
 
-export async function sendTelegramNotification(order) {
+export async function sendTelegramNotification(order, imageUri) {
   try {
-    const message = formatOrderMessage(order);
+    const caption = formatOrderCaption(order);
 
-    const response = await fetch(TELEGRAM_API, {
+    if (imageUri) {
+      const formData = new FormData();
+      formData.append('chat_id', TELEGRAM_CHAT_ID);
+      formData.append('photo', {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: 'payment_screenshot.jpg',
+      });
+      formData.append('caption', caption);
+      formData.append('parse_mode', 'Markdown');
+
+      const response = await fetch(`${TELEGRAM_API}/sendPhoto`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        console.warn('Telegram photo notification failed:', data.description);
+        return false;
+      }
+
+      return true;
+    }
+
+    const response = await fetch(`${TELEGRAM_API}/sendMessage`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         chat_id: TELEGRAM_CHAT_ID,
-        text: message,
+        text: caption,
         parse_mode: 'Markdown',
       }),
     });
@@ -74,7 +103,7 @@ export async function sendEmailNotification(order) {
       },
       body: JSON.stringify({
         subject: 'New Studio Booking Order',
-        message: formatOrderMessage(order),
+        message: formatOrderCaption(order),
         ...order,
       }),
     });

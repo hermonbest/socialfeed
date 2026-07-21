@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {OrderProvider} from './src/context/OrderContext';
 import CatalogScreen from './src/screens/CatalogScreen';
 import BookingScreen from './src/screens/BookingScreen';
+import {colors, typography} from './src/theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,14 @@ function App() {
           <Stack.Screen
             name="Booking"
             component={BookingScreen}
-            options={{headerShown: true, headerTitle: 'Book Now'}}
+            options={{
+              headerShown: true,
+              headerTitle: 'Booking',
+              headerTintColor: colors.text,
+              headerTitleStyle: {fontSize: 17, fontWeight: '600'},
+              headerStyle: {backgroundColor: colors.bg},
+              headerShadowVisible: false,
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

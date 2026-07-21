@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,12 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import {useOrder} from '../context/OrderContext';
+import { useOrder } from '../context/OrderContext';
 import PackageCard from '../components/PackageCard';
-import packages, {frameSizes, boardSizes, bannerSizes} from '../data/packages';
+import packages, { frameSizes, boardSizes, bannerSizes } from '../data/packages';
+import { colors, spacing, typography, borderRadius, shadows } from '../theme';
 
-function SizeRow({label}) {
+function SizeRow({ label }) {
   return (
     <View style={styles.sizeRow}>
       <Text style={styles.sizeText}>{label}</Text>
@@ -19,8 +20,8 @@ function SizeRow({label}) {
   );
 }
 
-function CatalogScreen({navigation}) {
-  const {selectPackage} = useOrder();
+function CatalogScreen({ navigation }) {
+  const { selectPackage } = useOrder();
 
   const handleOrder = useCallback(
     pkg => {
@@ -32,47 +33,47 @@ function CatalogScreen({navigation}) {
 
   const sections = [
     {
-      title: 'Outdoor Photography Packages',
+      title: 'Photography Packages',
       type: 'packages',
       data: packages,
     },
     {
-      title: 'Frame Prices',
+      title: 'Frame Sizes',
       type: 'sizes',
-      note: 'Contact us for pricing on these sizes',
+      note: 'Contact us for pricing',
       data: frameSizes,
     },
     {
-      title: 'Laminated Board Prices',
+      title: 'Laminated Board Sizes',
       type: 'sizes',
-      note: 'Contact us for pricing on these sizes',
+      note: 'Contact us for pricing',
       data: boardSizes,
     },
     {
-      title: 'Banner Prices',
+      title: 'Banner Sizes',
       type: 'sizes',
-      note: 'Contact us for pricing on these sizes',
+      note: 'Contact us for pricing',
       data: bannerSizes,
     },
   ];
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor="#1a1a2e" />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.bg} />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Brothers Studio</Text>
-        <Text style={styles.headerSub}>Browse Our Services</Text>
+        <Text style={styles.headerSub}>Premium photography services</Text>
       </View>
       <SectionList
         sections={sections}
         keyExtractor={(item, index) => item.id || `size-${index}`}
-        renderItem={({item, section}) => {
+        renderItem={({ item, section }) => {
           if (section.type === 'packages') {
             return <PackageCard pkg={item} onOrder={handleOrder} />;
           }
           return <SizeRow label={item.label} />;
         }}
-        renderSectionHeader={({section}) => (
+        renderSectionHeader={({ section }) => (
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{section.title}</Text>
             {section.note && (
@@ -90,59 +91,62 @@ function CatalogScreen({navigation}) {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: colors.bg,
   },
   header: {
-    backgroundColor: '#1a1a2e',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
+    backgroundColor: colors.bg,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderLight,
   },
   headerTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#fff',
+    fontSize: 32,
+    fontWeight: '700',
+    color: colors.text,
+    letterSpacing: 0.3,
   },
   headerSub: {
     fontSize: 15,
-    color: '#aaa',
-    marginTop: 4,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
+    letterSpacing: 0.2,
   },
   list: {
-    paddingTop: 8,
-    paddingBottom: 30,
-    backgroundColor: '#f5f5f5',
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.xxxl,
   },
   sectionHeader: {
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 8,
+    backgroundColor: colors.bg,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.md,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#1a1a2e',
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.text,
+    letterSpacing: 0.2,
   },
   sectionNote: {
     fontSize: 13,
-    color: '#e94560',
-    marginTop: 4,
+    color: colors.textTertiary,
+    marginTop: spacing.xs,
     fontStyle: 'italic',
   },
   sizeRow: {
-    backgroundColor: '#fff',
-    marginHorizontal: 16,
-    marginBottom: 6,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: '#eee',
+    backgroundColor: colors.surface,
+    marginHorizontal: spacing.xl,
+    marginBottom: spacing.sm,
+    borderRadius: borderRadius.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md + 2,
+    ...shadows.sm,
   },
   sizeText: {
     fontSize: 15,
-    color: '#333',
+    color: colors.text,
     fontWeight: '500',
   },
 });
