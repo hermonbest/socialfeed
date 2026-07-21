@@ -6,6 +6,10 @@ def enableSeparateBuildPerCPUArchitecture = true
 def enableShrinkResources = true
 
 android {
+    buildFeatures {
+        buildConfig true
+    }
+
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
