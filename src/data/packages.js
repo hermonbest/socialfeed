@@ -1,0 +1,65 @@
+const packages = [
+  {
+    id: 'portrait',
+    title: 'Portrait Session',
+    price: 149,
+    duration: '1 Hour',
+    coverColor: '#2d3436',
+    image: null,
+    inclusions: [
+      '10 Edited High-Resolution Photos',
+      '1 Outfit Change',
+      'Professional Lighting Setup',
+      'Online Gallery Access',
+      'Print Release',
+    ],
+  },
+  {
+    id: 'wedding',
+    title: 'Wedding Package',
+    price: 499,
+    duration: '4 Hours',
+    coverColor: '#6c5ce7',
+    image: null,
+    inclusions: [
+      '50 Edited High-Resolution Photos',
+      '2 Photographers',
+      'Full Event Coverage',
+      'Online Gallery Access',
+      'Print Release',
+      'Photo Album (20 Pages)',
+    ],
+  },
+  {
+    id: 'event',
+    title: 'Event Coverage',
+    price: 299,
+    duration: '2 Hours',
+    coverColor: '#00b894',
+    image: null,
+    inclusions: [
+      '25 Edited High-Resolution Photos',
+      '1 Photographer',
+      'Event Timeline Coverage',
+      'Online Gallery Access',
+      'Print Release',
+    ],
+  },
+  {
+    id: 'couples',
+    title: 'Couples Shoot',
+    price: 199,
+    duration: '1.5 Hours',
+    coverColor: '#fd79a8',
+    image: null,
+    inclusions: [
+      '20 Edited High-Resolution Photos',
+      '2 Outfit Changes',
+      'Multiple Locations',
+      'Online Gallery Access',
+      'Print Release',
+    ],
+  },
+];
+
+export default packages;
