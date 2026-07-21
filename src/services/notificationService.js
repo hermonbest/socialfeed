@@ -1,14 +1,21 @@
-const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN';
-const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
+const TELEGRAM_BOT_TOKEN = '__TELEGRAM_BOT_TOKEN__';
+const TELEGRAM_CHAT_ID = '__TELEGRAM_CHAT_ID__';
 
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+function formatPrice(price, currency) {
+  if (currency === 'ETB') {
+    return `${(price / 1000).toFixed(0)}K Birr (${price.toLocaleString()} ETB)`;
+  }
+  return `$${price}`;
+}
 
 function formatOrderMessage(order) {
   const lines = [
     '📸 *New Booking Order!*',
     '',
     `*Package:* ${order.packageTitle}`,
-    `*Price:* $${order.price}`,
+    `*Price:* ${formatPrice(order.price, order.currency)}`,
     `*Duration:* ${order.duration}`,
     '',
     '--- *Customer Details* ---',
@@ -17,6 +24,10 @@ function formatOrderMessage(order) {
     `*Email:* ${order.email}`,
     `*Date:* ${order.preferredDate}`,
     `*Time:* ${order.preferredTime}`,
+    '',
+    '--- *Payment* ---',
+    `*Method:* ${order.paymentMethod || 'Not specified'}`,
+    `*Account:* ${order.paymentAccount || 'N/A'}`,
     '',
     `*Submitted:* ${new Date().toLocaleString()}`,
   ];

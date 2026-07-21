@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {useOrder} from '../context/OrderContext';
 import {sendTelegramNotification} from '../services/notificationService';
+import paymentMethods from '../data/paymentConfig';
 
 function BookingScreen({navigation}) {
   const {selectedPackage, clearSelection, addOrder} = useOrder();
@@ -25,6 +26,7 @@ function BookingScreen({navigation}) {
     preferredTime: '',
   });
 
+  const [selectedPayment, setSelectedPayment] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
   const updateField = useCallback((field, value) => {
@@ -50,17 +52,27 @@ function BookingScreen({navigation}) {
       return;
     }
 
+    if (!selectedPayment) {
+      Alert.alert('Select Payment', 'Please choose a payment method.');
+      return;
+    }
+
     setSubmitting(true);
+
+    const paymentMethod = paymentMethods.find(p => p.id === selectedPayment);
 
     const order = {
       packageTitle: selectedPackage.title,
       price: selectedPackage.price,
+      currency: selectedPackage.currency || 'ETB',
       duration: selectedPackage.duration,
       fullName: fullName.trim(),
       phoneNumber: phoneNumber.trim(),
       email: email.trim(),
       preferredDate: preferredDate.trim(),
       preferredTime: preferredTime.trim(),
+      paymentMethod: paymentMethod?.name || selectedPayment,
+      paymentAccount: paymentMethod?.accountNumber || '',
     };
 
     addOrder(order);
@@ -70,13 +82,12 @@ function BookingScreen({navigation}) {
     setSubmitting(false);
     clearSelection();
 
-    Alert.alert('Order Submitted!', 'We will contact you shortly to confirm your booking.', [
-      {
-        text: 'OK',
-        onPress: () => navigation.goBack(),
-      },
-    ]);
-  }, [form, selectedPackage, addOrder, clearSelection, navigation]);
+    Alert.alert(
+      'Order Submitted!',
+      'We will confirm your booking after payment verification. You will be contacted shortly.',
+      [{text: 'OK', onPress: () => navigation.goBack()}],
+    );
+  }, [form, selectedPackage, selectedPayment, addOrder, clearSelection, navigation]);
 
   if (!selectedPackage) {
     return (
@@ -93,6 +104,11 @@ function BookingScreen({navigation}) {
     );
   }
 
+  const isETB = selectedPackage.currency === 'ETB';
+  const priceDisplay = isETB
+    ? `${(selectedPackage.price / 1000).toFixed(0)}K Birr`
+    : `$${selectedPackage.price}`;
+
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
@@ -101,20 +117,22 @@ function BookingScreen({navigation}) {
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled">
-          <Text style={styles.heading}>Book Your Session</Text>
+          <Text style={styles.heading}>Book Your Package</Text>
 
           <View style={styles.selectedCard}>
             <Text style={styles.selectedTitle}>{selectedPackage.title}</Text>
             <Text style={styles.selectedMeta}>
-              ${selectedPackage.price}  |  {selectedPackage.duration}
+              {priceDisplay}  |  {selectedPackage.duration}
             </Text>
           </View>
 
           <View style={styles.form}>
+            <Text style={styles.sectionTitle}>Your Information</Text>
+
             <Text style={styles.label}>Full Name</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. John Doe"
+              placeholder="e.g. Abebe Kebede"
               placeholderTextColor="#999"
               value={form.fullName}
               onChangeText={v => updateField('fullName', v)}
@@ -123,7 +141,7 @@ function BookingScreen({navigation}) {
             <Text style={styles.label}>Phone Number</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. +1 555-1234"
+              placeholder="e.g. +251 91X XXX XXXX"
               placeholderTextColor="#999"
               keyboardType="phone-pad"
               value={form.phoneNumber}
@@ -133,7 +151,7 @@ function BookingScreen({navigation}) {
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. john@example.com"
+              placeholder="e.g. abebe@example.com"
               placeholderTextColor="#999"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -160,19 +178,85 @@ function BookingScreen({navigation}) {
             />
           </View>
 
+          <View style={styles.paymentSection}>
+            <Text style={styles.sectionTitle}>Payment Method</Text>
+            <Text style={styles.paymentNote}>
+              Please pay first then submit your order.
+            </Text>
+
+            {paymentMethods.map(method => {
+              const selected = selectedPayment === method.id;
+              return (
+                <TouchableOpacity
+                  key={method.id}
+                  style={[styles.paymentOption, selected && styles.paymentOptionSelected]}
+                  onPress={() =>
+                    setSelectedPayment(selected ? null : method.id)
+                  }
+                  activeOpacity={0.7}>
+                  <View style={styles.paymentOptionLeft}>
+                    <Text style={styles.paymentLogo}>{method.logo}</Text>
+                    <View>
+                      <Text style={styles.paymentName}>{method.name}</Text>
+                      <Text style={styles.paymentDesc}>
+                        {method.instructions}
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={[
+                      styles.radio,
+                      selected && styles.radioSelected,
+                    ]}>
+                    {selected && <View style={styles.radioDot} />}
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+
+            {selectedPayment && (
+              <View style={styles.accountDetails}>
+                <Text style={styles.accountLabel}>Account Name</Text>
+                <Text style={styles.accountValue}>
+                  {paymentMethods.find(m => m.id === selectedPayment)?.accountName}
+                </Text>
+                <Text style={styles.accountLabel}>Account Number</Text>
+                <Text style={styles.accountValue}>
+                  {paymentMethods.find(m => m.id === selectedPayment)?.accountNumber}
+                </Text>
+                {paymentMethods.find(m => m.id === selectedPayment)?.additional && (
+                  <>
+                    <Text style={styles.accountLabel}>Bank</Text>
+                    <Text style={styles.accountValue}>
+                      {paymentMethods.find(m => m.id === selectedPayment)?.additional}
+                    </Text>
+                  </>
+                )}
+              </View>
+            )}
+          </View>
+
           <View style={styles.summary}>
             <Text style={styles.summaryTitle}>Order Summary</Text>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>{selectedPackage.title}</Text>
-              <Text style={styles.summaryValue}>${selectedPackage.price}</Text>
+              <Text style={styles.summaryValue}>{priceDisplay}</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Duration</Text>
               <Text style={styles.summaryValue}>{selectedPackage.duration}</Text>
             </View>
+            {selectedPayment && (
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Pay via</Text>
+                <Text style={styles.summaryValue}>
+                  {paymentMethods.find(m => m.id === selectedPayment)?.name}
+                </Text>
+              </View>
+            )}
             <View style={[styles.summaryRow, styles.totalRow]}>
               <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.totalValue}>${selectedPackage.price}</Text>
+              <Text style={styles.totalValue}>{priceDisplay}</Text>
             </View>
           </View>
 
@@ -215,6 +299,12 @@ const styles = StyleSheet.create({
     color: '#1a1a2e',
     marginBottom: 20,
   },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1a1a2e',
+    marginBottom: 12,
+  },
   selectedCard: {
     backgroundColor: '#1a1a2e',
     borderRadius: 12,
@@ -251,6 +341,90 @@ const styles = StyleSheet.create({
     color: '#333',
     borderWidth: 1,
     borderColor: '#ddd',
+  },
+  paymentSection: {
+    marginBottom: 20,
+  },
+  paymentNote: {
+    fontSize: 13,
+    color: '#e94560',
+    fontWeight: '600',
+    marginBottom: 12,
+    fontStyle: 'italic',
+  },
+  paymentOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 10,
+    borderWidth: 1.5,
+    borderColor: '#eee',
+  },
+  paymentOptionSelected: {
+    borderColor: '#e94560',
+    backgroundColor: '#fff5f5',
+  },
+  paymentOptionLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  paymentLogo: {
+    fontSize: 28,
+    marginRight: 12,
+  },
+  paymentName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1a1a2e',
+  },
+  paymentDesc: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 2,
+  },
+  radio: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 2,
+    borderColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioSelected: {
+    borderColor: '#e94560',
+  },
+  radioDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#e94560',
+  },
+  accountDetails: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e94560',
+    marginTop: 4,
+  },
+  accountLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#999',
+    marginTop: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  accountValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1a1a2e',
+    marginTop: 2,
   },
   summary: {
     backgroundColor: '#fff',

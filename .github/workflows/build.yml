@@ -48,6 +48,11 @@ jobs:
             -o android/gradle/wrapper/gradle-wrapper.jar
           chmod +x android/gradlew
 
+      - name: Inject Telegram credentials from secrets
+        run: |
+          sed -i "s|__TELEGRAM_BOT_TOKEN__|${{ secrets.TELEGRAM_BOT_TOKEN }}|g" src/services/notificationService.js
+          sed -i "s|__TELEGRAM_CHAT_ID__|${{ secrets.TELEGRAM_CHAT_ID }}|g" src/services/notificationService.js
+
       - name: Bundle JS for Android
         run: |
           mkdir -p android/app/src/main/assets

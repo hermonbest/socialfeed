@@ -1,20 +1,43 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 
 function PackageCard({pkg, onOrder}) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const hasImage = pkg.imageUrl && !imageFailed;
+
+  const isETB = pkg.currency === 'ETB';
+  const priceDisplay = isETB
+    ? `${(pkg.price / 1000).toFixed(0)}K Birr`
+    : `$${pkg.price}`;
+
   return (
     <View style={styles.card}>
       <View style={[styles.cover, {backgroundColor: pkg.coverColor}]}>
-        <Text style={styles.coverEmoji}>
-          {pkg.id === 'portrait' ? '📸' :
-           pkg.id === 'wedding' ? '💍' :
-           pkg.id === 'event' ? '🎉' : '💑'}
-        </Text>
+        {hasImage ? (
+          <Image
+            source={{uri: pkg.imageUrl}}
+            style={styles.coverImage}
+            resizeMode="cover"
+            onError={() => setImageFailed(true)}
+          />
+        ) : null}
+        <View style={[styles.coverOverlay, hasImage && styles.coverOverlayDark]}>
+          <Text style={styles.coverEmoji}>
+            {pkg.id === 'outdoor1' ? '👑' :
+             pkg.id === 'outdoor2' ? '💍' :
+             pkg.id === 'outdoor3' ? '📸' : '🎉'}
+          </Text>
+        </View>
+        {pkg.badge && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{pkg.badge}</Text>
+          </View>
+        )}
       </View>
       <View style={styles.body}>
         <Text style={styles.title}>{pkg.title}</Text>
         <View style={styles.metaRow}>
-          <Text style={styles.price}>${pkg.price}</Text>
+          <Text style={styles.price}>{priceDisplay}</Text>
           <Text style={styles.duration}>{pkg.duration}</Text>
         </View>
         <View style={styles.inclusions}>
@@ -49,12 +72,39 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cover: {
-    height: 180,
+    height: 200,
+    position: 'relative',
+  },
+  coverImage: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
+  },
+  coverOverlay: {
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  coverOverlayDark: {
+    backgroundColor: 'rgba(0,0,0,0.35)',
+  },
   coverEmoji: {
-    fontSize: 64,
+    fontSize: 56,
+  },
+  badge: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+    borderRadius: 20,
+    zIndex: 2,
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#1a1a2e',
   },
   body: {
     padding: 20,
@@ -72,7 +122,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   price: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: '800',
     color: '#e94560',
   },
