@@ -27,6 +27,14 @@ allprojects {
     }
 }
 
+subprojects { subproject ->
+    afterEvaluate {
+        if (subproject.extensions.findByName("android") != null) {
+            subproject.android.buildFeatures.buildConfig = true
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.layout.buildDirectory
 }
