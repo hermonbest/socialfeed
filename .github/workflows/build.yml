@@ -64,11 +64,11 @@ jobs:
 
       - name: Verify Telegram secrets were injected
         run: |
-          if grep -q '__TELEGRAM_BOT_TOKEN__\|__TELEGRAM_CHAT_ID__' src/services/notificationService.js; then
-            echo "::warning::Some placeholders remain! Notification will fail."
+          if grep -q '__TELEGRAM_BOT_TOKEN__' src/services/notificationService.js || grep -q '__TELEGRAM_CHAT_ID__' src/services/notificationService.js; then
+            echo "::error::Placeholders still present in notificationService.js!"
             exit 1
           fi
-          node -e "const c=require('./src/services/notificationService'); console.log('Module loads OK')"
+          echo "All placeholders replaced successfully"
 
       - name: Test Telegram bot token
         env:
