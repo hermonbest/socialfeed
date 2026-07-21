@@ -1,14 +1,17 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
-apply plugin: "com.facebook.react"
 
-react {
-    //
-}
-
+def rnVersion = "0.73.6"
 def enableProguardInReleaseBuilds = true
 def enableSeparateBuildPerCPUArchitecture = true
 def enableShrinkResources = true
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("com.facebook.react:react-native")
+            .using module("com.facebook.react:react-android:${rnVersion}")
+    }
+}
 
 android {
     buildFeatures {
@@ -58,10 +61,10 @@ android {
 }
 
 dependencies {
-    implementation("com.facebook.react:react-android")
+    implementation("com.facebook.react:react-android:${rnVersion}")
 
     if (hermesEnabled.toBoolean()) {
-        implementation("com.facebook.react:hermes-android")
+        implementation("com.facebook.react:hermes-android:${rnVersion}")
     } else {
         implementation jscFlavor
     }
