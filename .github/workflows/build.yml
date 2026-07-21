@@ -20,8 +20,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: npm install
+      - name: Clean stale lock file and install dependencies
+        run: |
+          rm -f package-lock.json
+          npm install
 
       - name: Setup Java
         uses: actions/setup-java@v4

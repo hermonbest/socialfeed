@@ -47,6 +47,9 @@ yarn-error.log
 /ios/Pods/
 /vendor/bundle/
 
+# Expo
+.expo/
+
 # Temporary files
 *.swp
 *.swo
