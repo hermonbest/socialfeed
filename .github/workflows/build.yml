@@ -46,6 +46,16 @@ jobs:
             -o android/gradle/wrapper/gradle-wrapper.jar
           chmod +x android/gradlew
 
+      - name: Bundle JS for Android
+        run: |
+          mkdir -p android/app/src/main/assets
+          npx react-native bundle \
+            --platform android \
+            --dev false \
+            --entry-file index.js \
+            --bundle-output android/app/src/main/assets/index.android.bundle \
+            --assets-dest android/app/src/main/res
+
       - name: Build Release APKs
         run: |
           cd android
