@@ -28,6 +28,13 @@ allprojects {
 }
 
 subprojects { subproject ->
+    subproject.configurations.all {
+        resolutionStrategy.dependencySubstitution {
+            substitute(module("com.facebook.react:react-native"))
+                .using(module("com.facebook.react:react-android:0.73.6"))
+        }
+    }
+
     afterEvaluate {
         if (subproject.extensions.findByName("android") != null) {
             subproject.android.buildFeatures.buildConfig = true

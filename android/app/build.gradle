@@ -6,12 +6,6 @@ def enableProguardInReleaseBuilds = true
 def enableSeparateBuildPerCPUArchitecture = true
 def enableShrinkResources = true
 
-configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute module("com.facebook.react:react-native") using module("com.facebook.react:react-android:${rnVersion}")
-    }
-}
-
 android {
     buildFeatures {
         buildConfig true
