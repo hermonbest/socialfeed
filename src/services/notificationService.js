@@ -5,31 +5,31 @@ const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
 function formatPrice(price, currency) {
   if (currency === 'ETB') {
-    return `${(price / 1000).toFixed(0)}K Birr (${price.toLocaleString()} ETB)`;
+    return `${(price / 1000).toFixed(0)}K ብር (${price.toLocaleString()} ETB)`;
   }
   return `$${price}`;
 }
 
 function formatOrderCaption(order) {
   const lines = [
-    '📸 *New Booking Order!*',
+    '📸 *አዲስ የቦታ ማስያዣ ትዕዛዝ!*',
     '',
-    `*Package:* ${order.packageTitle}`,
-    `*Price:* ${formatPrice(order.price, order.currency)}`,
-    `*Duration:* ${order.duration}`,
+    `*ፓኬጅ፡* ${order.packageTitle}`,
+    `*ዋጋ፡* ${formatPrice(order.price, order.currency)}`,
+    `*ቆይታ፡* ${order.duration}`,
     '',
-    '--- *Customer Details* ---',
-    `*Name:* ${order.fullName}`,
-    `*Phone:* ${order.phoneNumber}`,
-    `*Email:* ${order.email}`,
-    `*Date:* ${order.preferredDate}`,
-    `*Time:* ${order.preferredTime}`,
+    '--- *የደንበኛ ዝርዝሮች* ---',
+    `*ስም፡* ${order.fullName}`,
+    `*ስልክ፡* ${order.phoneNumber}`,
+    `*ኢሜይል፡* ${order.email}`,
+    `*ቀን፡* ${order.preferredDate}`,
+    `*ሰዓት፡* ${order.preferredTime}`,
     '',
-    '--- *Payment* ---',
-    `*Method:* ${order.paymentMethod || 'Not specified'}`,
-    `*Account:* ${order.paymentAccount || 'N/A'}`,
+    '--- *ክፍያ* ---',
+    `*ዘዴ፡* ${order.paymentMethod || 'አልተገለጸም'}`,
+    `*መለያ፡* ${order.paymentAccount || 'የለም'}`,
     '',
-    `*Submitted:* ${new Date().toLocaleString()}`,
+    `*የገባበት፡* ${new Date().toLocaleString()}`,
   ];
 
   return lines.join('\n');
@@ -102,7 +102,7 @@ export async function sendEmailNotification(order) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        subject: 'New Studio Booking Order',
+        subject: 'አዲስ የስቱዲዮ ቦታ ማስያዣ ትዕዛዝ',
         message: formatOrderCaption(order),
         ...order,
       }),

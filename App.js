@@ -24,7 +24,7 @@ function App() {
             component={BookingScreen}
             options={{
               headerShown: true,
-              headerTitle: 'Booking',
+              headerTitle: 'ቦታ ማስያዣ',
               headerTintColor: colors.text,
               headerTitleStyle: {fontSize: 17, fontWeight: '600'},
               headerStyle: {backgroundColor: colors.bg},

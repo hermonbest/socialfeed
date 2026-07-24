@@ -68,24 +68,24 @@ function BookingScreen({ navigation }) {
       !preferredDate.trim() ||
       !preferredTime.trim()
     ) {
-      Alert.alert('Missing Fields', 'Please fill in all fields.');
+      Alert.alert('የጎደሉ መስኮች', 'እባክዎ ሁሉንም መስኮች ይሙሉ።');
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+      Alert.alert('ልክ ያልሆነ ኢሜይል', 'እባክዎ ትክክለኛ የኢሜይል አድራሻ ያስገቡ።');
       return;
     }
 
     if (!selectedPayment) {
-      Alert.alert('Select Payment', 'Please choose a payment method.');
+      Alert.alert('ክፍያ ይምረጡ', 'እባክዎ የክፍያ ዘዴ ይምረጡ።');
       return;
     }
 
     if (!paymentPhoto) {
       Alert.alert(
-        'Upload Screenshot',
-        'Please upload your payment screenshot before submitting.',
+        'ስክሪንሾት ይስቀሉ',
+        'እባክዎ ከማስገባትዎ በፊት የክፍያ ስክሪንሾትዎን ይስቀሉ።',
       );
       return;
     }
@@ -117,15 +117,15 @@ function BookingScreen({ navigation }) {
     if (sent) {
       clearSelection();
       Alert.alert(
-        'Order Submitted',
-        'Your payment screenshot has been received. We will verify and confirm your booking shortly.',
-        [{ text: 'OK', onPress: () => navigation.goBack() }],
+        'ትዕዛዝ ገብቷል',
+        'የክፍያ ስክሪንሾትዎ ደርሷል። በቅርቡ አረጋግጠን ቦታዎን እናረጋግጣለን።',
+        [{ text: 'እሺ', onPress: () => navigation.goBack() }],
       );
     } else {
       Alert.alert(
-        'Order Saved',
-        'Your order was saved locally but the notification could not be sent. Please contact us directly with your order details.',
-        [{ text: 'OK', onPress: () => navigation.goBack() }],
+        'ትዕዛዝ ተቀምጧል',
+        'ትዕዛዝዎ በአካባቢው ተቀምጧል ነገር ግን ማሳወቂያው መላክ አልተቻለም። እባክዎ በቀጥታ ያግኙን።',
+        [{ text: 'እሺ', onPress: () => navigation.goBack() }],
       );
     }
   }, [form, selectedPackage, selectedPayment, paymentPhoto, addOrder, clearSelection, navigation]);
@@ -138,11 +138,11 @@ function BookingScreen({ navigation }) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No package selected.</Text>
+          <Text style={styles.emptyText}>ምንም ፓኬጅ አልተመረጠም።</Text>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>Browse Packages</Text>
+            <Text style={styles.backButtonText}>ፓኬጆችን ይመልከቱ</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -163,8 +163,8 @@ function BookingScreen({ navigation }) {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled">
           <View style={styles.headerSection}>
-            <Text style={styles.heading}>Complete Booking</Text>
-            <Text style={styles.headingSub}>Fill in your details to reserve this package</Text>
+            <Text style={styles.heading}>ቦታ ያስይዙ</Text>
+            <Text style={styles.headingSub}>ይህን ፓኬጅ ለማስያዝ ዝርዝሮችዎን ይሙሉ</Text>
           </View>
 
           <View style={styles.selectedCard}>
@@ -180,31 +180,31 @@ function BookingScreen({ navigation }) {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Personal Information</Text>
+            <Text style={styles.sectionTitle}>የግል መረጃ</Text>
 
-            <Text style={styles.label}>Full Name</Text>
+            <Text style={styles.label}>ሙሉ ስም</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. Abebe Kebede"
+              placeholder="ለምሳሌ፡ አበበ ከበደ"
               placeholderTextColor={colors.textTertiary}
               value={form.fullName}
               onChangeText={v => updateField('fullName', v)}
             />
 
-            <Text style={styles.label}>Phone Number</Text>
+            <Text style={styles.label}>ስልክ ቁጥር</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. +251 91X XXX XXXX"
+              placeholder="ለምሳሌ፡ +251 91X XXX XXXX"
               placeholderTextColor={colors.textTertiary}
               keyboardType="phone-pad"
               value={form.phoneNumber}
               onChangeText={v => updateField('phoneNumber', v)}
             />
 
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>ኢሜይል</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. abebe@example.com"
+              placeholder="ለምሳሌ፡ abebe@example.com"
               placeholderTextColor={colors.textTertiary}
               keyboardType="email-address"
               autoCapitalize="none"
@@ -212,19 +212,19 @@ function BookingScreen({ navigation }) {
               onChangeText={v => updateField('email', v)}
             />
 
-            <Text style={styles.label}>Preferred Date</Text>
+            <Text style={styles.label}>የሚመረጥ ቀን</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. 2026-08-15"
+              placeholder="ለምሳሌ፡ 2026-08-15"
               placeholderTextColor={colors.textTertiary}
               value={form.preferredDate}
               onChangeText={v => updateField('preferredDate', v)}
             />
 
-            <Text style={styles.label}>Preferred Time</Text>
+            <Text style={styles.label}>የሚመረጥ ሰዓት</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. 2:00 PM"
+              placeholder="ለምሳሌ፡ 2:00 PM"
               placeholderTextColor={colors.textTertiary}
               value={form.preferredTime}
               onChangeText={v => updateField('preferredTime', v)}
@@ -234,9 +234,9 @@ function BookingScreen({ navigation }) {
           <View style={styles.divider} />
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Payment Method</Text>
+            <Text style={styles.sectionTitle}>የክፍያ ዘዴ</Text>
             <Text style={styles.sectionNote}>
-              Pay first, then submit your order with the payment screenshot.
+              አስቀድመው ይክፈሉ፣ ከዚያም ትዕዛዝዎን በክፍያ ስክሪንሾት ያስገቡ።
             </Text>
 
             {paymentMethods.map(method => {
@@ -275,16 +275,16 @@ function BookingScreen({ navigation }) {
                   return (
                     <>
                       <View style={styles.accountRow}>
-                        <Text style={styles.accountLabel}>Account Name</Text>
+                        <Text style={styles.accountLabel}>የመለያ ስም</Text>
                         <Text style={styles.accountValue}>{pm.accountName}</Text>
                       </View>
                       <View style={styles.accountRow}>
-                        <Text style={styles.accountLabel}>Account Number</Text>
+                        <Text style={styles.accountLabel}>የመለያ ቁጥር</Text>
                         <Text style={styles.accountValue}>{pm.accountNumber}</Text>
                       </View>
                       {pm.additional && (
                         <View style={styles.accountRow}>
-                          <Text style={styles.accountLabel}>Bank</Text>
+                          <Text style={styles.accountLabel}>ባንክ</Text>
                           <Text style={styles.accountValue}>{pm.additional}</Text>
                         </View>
                       )}
@@ -295,7 +295,7 @@ function BookingScreen({ navigation }) {
             )}
 
             <View style={styles.uploadSection}>
-              <Text style={styles.uploadLabel}>Payment Screenshot</Text>
+              <Text style={styles.uploadLabel}>የክፍያ ስክሪንሾት</Text>
 
               {paymentPhoto ? (
                 <View style={styles.photoPreviewContainer}>
@@ -307,7 +307,7 @@ function BookingScreen({ navigation }) {
                   <TouchableOpacity
                     style={styles.removePhotoButton}
                     onPress={removePhoto}>
-                    <Text style={styles.removePhotoText}>Remove</Text>
+                    <Text style={styles.removePhotoText}>አስወግድ</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
@@ -316,7 +316,7 @@ function BookingScreen({ navigation }) {
                   onPress={pickPhoto}
                   activeOpacity={0.7}>
                   <Text style={styles.uploadButtonIcon}>+</Text>
-                  <Text style={styles.uploadButtonText}>Upload Screenshot</Text>
+                  <Text style={styles.uploadButtonText}>ስክሪንሾት ይስቀሉ</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -325,18 +325,18 @@ function BookingScreen({ navigation }) {
           <View style={styles.divider} />
 
           <View style={styles.summary}>
-            <Text style={styles.summaryTitle}>Order Summary</Text>
+            <Text style={styles.summaryTitle}>የትዕዛዝ ማጠቃለያ</Text>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Package</Text>
+              <Text style={styles.summaryLabel}>ፓኬጅ</Text>
               <Text style={styles.summaryValue}>{selectedPackage.title}</Text>
             </View>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Duration</Text>
+              <Text style={styles.summaryLabel}>ቆይታ</Text>
               <Text style={styles.summaryValue}>{selectedPackage.duration}</Text>
             </View>
             {selectedPayment && (
               <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>Payment</Text>
+                <Text style={styles.summaryLabel}>ክፍያ</Text>
                 <Text style={styles.summaryValue}>
                   {paymentMethods.find(m => m.id === selectedPayment)?.name}
                 </Text>
@@ -344,12 +344,12 @@ function BookingScreen({ navigation }) {
             )}
             {paymentPhoto && (
               <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>Screenshot</Text>
-                <Text style={styles.summaryValue}>Uploaded</Text>
+                <Text style={styles.summaryLabel}>ስክሪንሾት</Text>
+                <Text style={styles.summaryValue}>ተሰቅሏል</Text>
               </View>
             )}
             <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total</Text>
+              <Text style={styles.totalLabel}>ጠቅላላ</Text>
               <Text style={styles.totalValue}>{priceDisplay}</Text>
             </View>
           </View>
@@ -360,14 +360,14 @@ function BookingScreen({ navigation }) {
             disabled={submitting}
             activeOpacity={0.8}>
             <Text style={styles.submitText}>
-              {submitting ? 'Submitting...' : 'Submit Order'}
+              {submitting ? 'በማስገባት ላይ...' : 'ትዕዛዝ ያስገቡ'}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.cancelButton}
             onPress={() => navigation.goBack()}>
-            <Text style={styles.cancelText}>Cancel</Text>
+            <Text style={styles.cancelText}>ሰርዝ</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: borderRadius.md,
-    backgroundColor: colors.borderLight,
+    backgroundColor: '#2A2A2A',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: spacing.md,
@@ -579,7 +579,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     padding: spacing.xxl,
     borderWidth: 1.5,
-    borderColor: colors.border,
+    borderColor: '#444444',
     borderStyle: 'dashed',
   },
   uploadButtonIcon: {

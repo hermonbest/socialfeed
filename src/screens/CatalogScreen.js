@@ -33,36 +33,36 @@ function CatalogScreen({ navigation }) {
 
   const sections = [
     {
-      title: 'Photography Packages',
+      title: 'የፎቶግራፍ ፓኬጆች',
       type: 'packages',
       data: packages,
     },
     {
-      title: 'Frame Sizes',
+      title: 'የፍሬም መጠኖች',
       type: 'sizes',
-      note: 'Contact us for pricing',
+      note: 'ዋጋ ለማወቅ ያግኙን',
       data: frameSizes,
     },
     {
-      title: 'Laminated Board Sizes',
+      title: 'የላሚኔትድ ቦርድ መጠኖች',
       type: 'sizes',
-      note: 'Contact us for pricing',
+      note: 'ዋጋ ለማወቅ ያግኙን',
       data: boardSizes,
     },
     {
-      title: 'Banner Sizes',
+      title: 'የባነር መጠኖች',
       type: 'sizes',
-      note: 'Contact us for pricing',
+      note: 'ዋጋ ለማወቅ ያግኙን',
       data: bannerSizes,
     },
   ];
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={colors.bg} />
+      <StatusBar barStyle="light-content" backgroundColor={colors.bg} />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Brothers Studio</Text>
-        <Text style={styles.headerSub}>Premium photography services</Text>
+        <Text style={styles.headerSub}>ከፍተኛ የፎቶግራፍ አገልግሎቶች</Text>
       </View>
       <SectionList
         sections={sections}

@@ -47,7 +47,7 @@ function PackageCard({ pkg, onOrder }) {
           style={styles.button}
           onPress={() => onOrder(pkg)}
           activeOpacity={0.8}>
-          <Text style={styles.buttonText}>Book Now</Text>
+          <Text style={styles.buttonText}>አሁን ያስይዙ</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: spacing.lg,
     right: spacing.lg,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: 'rgba(26,26,26,0.95)',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 1,
     borderRadius: borderRadius.full,
